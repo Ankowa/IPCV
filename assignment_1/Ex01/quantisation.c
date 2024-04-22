@@ -408,9 +408,7 @@ void quantisation
 
   for (j = 1; j <= ny; j++)
     for (i = 1; i <= nx; i++) {
-      /*
-       SUPPLEMENT MISSING CODE HERE
-      */
+      u[j][i] = (floor(u[j][i] / d) + 0.5) * d;
     }
 
   return;
