@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /*--------------------------------------------------------------------------*/
 /*                                                                          */
@@ -34,14 +35,17 @@ void alloc_double_matrix
 
   *matrix = (double **)malloc(n1 * sizeof(double *));
 
-  if (*matrix == NULL) {
+  if (*matrix == NULL)
+  {
     printf("alloc_double_matrix: not enough memory available\n");
     exit(1);
   }
 
-  for (i = 0; i < n1; i++) {
+  for (i = 0; i < n1; i++)
+  {
     (*matrix)[i] = (double *)malloc(n2 * sizeof(double));
-    if ((*matrix)[i] == NULL) {
+    if ((*matrix)[i] == NULL)
+    {
       printf("alloc_double_matrix: not enough memory available\n");
       exit(1);
     }
@@ -86,7 +90,8 @@ void read_string
 */
 
 {
-  if (fgets(v, 80, stdin) == NULL) {
+  if (fgets(v, 80, stdin) == NULL)
+  {
     printf("could not read string, aborting\n");
     exit(1);
   }
@@ -111,7 +116,8 @@ void read_long
 {
   char row[80]; /* string for reading data */
 
-  if (fgets(row, 80, stdin) == NULL) {
+  if (fgets(row, 80, stdin) == NULL)
+  {
     printf("could not read string, aborting\n");
     exit(1);
   }
@@ -144,14 +150,17 @@ void skip_white_space_and_comments
     ;
 
   /* skip comments */
-  if (ch == '#') {
+  if (ch == '#')
+  {
     if (fgets(row, sizeof(row), inimage))
       skip_white_space_and_comments(inimage);
-    else {
+    else
+    {
       printf("skip_white_space_and_comments: cannot read file\n");
       exit(1);
     }
-  } else
+  }
+  else
     fseek(inimage, -1, SEEK_CUR);
 
   return;
@@ -184,42 +193,50 @@ void read_pgm_to_double
 
   /* open file */
   inimage = fopen(file_name, "rb");
-  if (inimage == NULL) {
+  if (inimage == NULL)
+  {
     printf("read_pgm_to_double: cannot open file '%s'\n", file_name);
     exit(1);
   }
 
   /* read header */
-  if (fgets(row, 80, inimage) == NULL) {
+  if (fgets(row, 80, inimage) == NULL)
+  {
     printf("read_pgm_to_double: cannot read file\n");
     exit(1);
   }
 
   /* image type: P5 */
-  if ((row[0] == 'P') && (row[1] == '5')) {
+  if ((row[0] == 'P') && (row[1] == '5'))
+  {
     /* P5: grey scale image */
-  } else {
+  }
+  else
+  {
     printf("read_pgm_to_double: unknown image format\n");
     exit(1);
   }
 
   /* read image size in x direction */
   skip_white_space_and_comments(inimage);
-  if (!fscanf(inimage, "%ld", nx)) {
+  if (!fscanf(inimage, "%ld", nx))
+  {
     printf("read_pgm_to_double: cannot read image size nx\n");
     exit(1);
   }
 
   /* read image size in x direction */
   skip_white_space_and_comments(inimage);
-  if (!fscanf(inimage, "%ld", ny)) {
+  if (!fscanf(inimage, "%ld", ny))
+  {
     printf("read_pgm_to_double: cannot read image size ny\n");
     exit(1);
   }
 
   /* read maximum grey value */
   skip_white_space_and_comments(inimage);
-  if (!fscanf(inimage, "%ld", &max_value)) {
+  if (!fscanf(inimage, "%ld", &max_value))
+  {
     printf("read_pgm_to_double: cannot read maximal value\n");
     exit(1);
   }
@@ -303,7 +320,8 @@ void write_double_to_pgm
 
   /* open file */
   outimage = fopen(file_name, "wb");
-  if (NULL == outimage) {
+  if (NULL == outimage)
+  {
     printf("could not open file '%s' for writing, aborting\n", file_name);
     exit(1);
   }
@@ -317,7 +335,8 @@ void write_double_to_pgm
 
   /* write image data */
   for (j = 1; j <= ny; j++)
-    for (i = 1; i <= nx; i++) {
+    for (i = 1; i <= nx; i++)
+    {
       aux = u[i][j] + 0.499999; /* for correct rounding */
       if (aux < 0.0)
         byte = (unsigned char)(0.0);
@@ -362,7 +381,8 @@ void analyse_grey_double
   *max = u[1][1];
   help1 = 0.0;
   for (i = 1; i <= nx; i++)
-    for (j = 1; j <= ny; j++) {
+    for (j = 1; j <= ny; j++)
+    {
       if (u[i][j] < *min)
         *min = u[i][j];
       if (u[i][j] > *max)
@@ -374,7 +394,8 @@ void analyse_grey_double
   /* compute standard deviation */
   *std = 0.0;
   for (i = 1; i <= nx; i++)
-    for (j = 1; j <= ny; j++) {
+    for (j = 1; j <= ny; j++)
+    {
       help2 = u[i][j] - *mean;
       *std = *std + help2 * help2;
     }
@@ -407,7 +428,8 @@ void quantisation
   d = pow(2.0, 8 - q);
 
   for (j = 1; j <= ny; j++)
-    for (i = 1; i <= nx; i++) {
+    for (i = 1; i <= nx; i++)
+    {
       u[j][i] = (floor(u[j][i] / d) + 0.5) * d;
     }
 
@@ -433,16 +455,24 @@ void quantisation_with_noise
   long i, j;    /* loop variables */
   double d;     /* auxiliary variable */
   double noise; /* variable for uniformly distributed noise */
+  srand(time(NULL));
 
   /* quantise the input image */
   d = pow(2.0, 8 - q);
   noise = 0.0;
   for (j = 1; j <= ny; j++)
-    for (i = 1; i <= nx; i++) {
+    for (i = 1; i <= nx; i++)
+    {
       /*
        SUPPLEMENT MISSING CODE HERE
       */
-    }
+
+      noise = (rand() % RAND_MAX) * 1.0 / RAND_MAX - 0.5;
+
+      u[j][i] = (floor((u[j][i] / d) + noise) + 0.5) * d; // this might lead to invalid values -- eg for initial u=0 and any negative noise the value is -0.5*d
+
+      // this might be resolved by clipping the values, but them the number of bits used to represent a value in the output image is not q anymore
+        }
 
   return;
 
@@ -506,7 +536,8 @@ int main()
   else if (flag == 2)
     /* perform quantisation with uniformly distributed noise */
     quantisation_with_noise(nx, ny, q, u);
-  else {
+  else
+  {
     printf("option (%ld) not available! \n\n\n", flag);
     free_double_matrix(u, nx + 2, ny + 2);
     return (0);
