@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /*--------------------------------------------------------------------------*/
 /*                                                                          */
@@ -433,6 +434,7 @@ void quantisation_with_noise
   long i, j;    /* loop variables */
   double d;     /* auxiliary variable */
   double noise; /* variable for uniformly distributed noise */
+  srand(time(NULL));
 
   /* quantise the input image */
   d = pow(2.0, 8 - q);
@@ -442,6 +444,21 @@ void quantisation_with_noise
       /*
        SUPPLEMENT MISSING CODE HERE
       */
+
+      noise = (rand() % RAND_MAX) * 1.0 / RAND_MAX -
+              0.5; // noise is uniformly distributed in [-0.5, 0.5]
+      u[j][i] = (floor((u[j][i] / d) + noise) + 0.5) *
+                d; // this might lead to invalid values -- eg for initial u=0
+                   // and any negative noise the value is -0.5*d
+
+      // this might be resolved by clipping the values, but them the number of
+      // bits used to represent a value in the output image is not q anymore
+
+      // a better approach would be to add only positive noise, 
+      // or clamp values to the valid range before re-scaling to 0-255
+
+      // Other than that, adding the noise makes the quantisation borders less visible
+      // and the image looks more natural, keeping the same number of bits
     }
 
   return;
